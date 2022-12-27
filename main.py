@@ -11,8 +11,7 @@ pygame.display.set_caption('Beyond')
 FPS = 30
 clock = pygame.time.Clock()
 tile_width = tile_height = 50
-music = MusicPlayer('Loqiemean - Вайолентово.mp3')
-print(music.music)
+player = MusicPlayer('Loqiemean - Вайолентово.mp3')
 
 all_sprites = pygame.sprite.Group()
 
@@ -48,8 +47,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            music.play()
     pygame.display.flip()
     clock.tick(FPS)
 pygame.quit()
