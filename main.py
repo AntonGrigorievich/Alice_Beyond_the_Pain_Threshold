@@ -1,6 +1,8 @@
 import pygame
 import os
 
+pygame.mixer.pre_init(44000, -16, 1, 512)
+pygame.init()
 
 size = width, height = 1100, 600
 screen = pygame.display.set_mode(size)
@@ -11,6 +13,11 @@ tile_width = tile_height = 50
 
 all_sprites = pygame.sprite.Group()
 
+settings = {
+    'music_volume': 1,
+    'sounds_volume': 1,
+    'difficulty' : 'normal',
+}
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
