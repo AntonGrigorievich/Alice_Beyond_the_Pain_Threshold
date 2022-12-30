@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 from music_player import MusicPlayer
+from animated_sprite import AnimatedSprite
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -16,17 +17,19 @@ player = MusicPlayer('Loqiemean - Вайолентово.mp3')
 
 all_sprites = pygame.sprite.Group()
 start_sprites = pygame.sprite.Group()
+hero_sprites = pygame.sprite.Group()
 
 settings = {
     'music_volume': 1,
     'sounds_volume': 1,
-    'difficulty' : 'normal',
+    'difficulty': 'normal',
 }
+
 
 def terminate():
     pygame.quit()
     sys.exit()
-    
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -42,8 +45,8 @@ def load_image(name, colorkey=None):
             image = image.convert_alpha()
         return image
     except Exception:
-        #тут заменяем текстуру на error
-        #в случае если картинка не найдена
+        # тут заменяем текстуру на error
+        # в случае если картинка не найдена
         image = pygame.image.load(error_image)
         return image
 
