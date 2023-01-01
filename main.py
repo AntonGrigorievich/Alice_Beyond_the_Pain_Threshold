@@ -81,33 +81,38 @@ def start_screen():
 
     start_screen_alice = AnimatedSprite(start_sprites, start_sprites, \
         pygame.transform.scale(load_image('alice/moving_D_fix.png'), (450, 165)), 4, 1, 910, 400)
+    pressed_start = False
 
     while True:
         screen.fill('white')
         start_sprites.draw(screen)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
+                pressed_start = True
 
-                # пока не работает
-                # while start_screen_alice.rect.x < 1150:
-                #     start_screen_alice.rect.x += 2
-                #     start_screen_alice.update()
-                #     pygame.display.flip()
-                #     clock.tick(FPS)
-
-                return
-        if start_screen_1.rect.x > -2180:
-            start_screen_1.rect.x -= 2
-        else:
+        # движение фона стартового экрана
+        if start_screen_1.rect.x > -2180 and not pressed_start:
+            start_screen_1.rect.x -= 1
+        elif not pressed_start:
             start_screen_1.rect.x += 2180
-        if start_screen_2.rect.x > 0:
-            start_screen_2.rect.x -= 2
-        else:
+        if start_screen_2.rect.x > 0 and not pressed_start:
+            start_screen_2.rect.x -= 1
+        elif not pressed_start:
             start_screen_2.rect.x += 2180
-        start_screen_alice.update()
+
+        if not pressed_start:
+            pass
+        else:
+            if start_screen_alice.rect.x < 1130:
+                start_screen_alice.rect.x += 3
+            else:
+                return
+
+        start_sprites.update()
         pygame.display.flip()
         clock.tick(FPS)
 
