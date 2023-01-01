@@ -64,6 +64,24 @@ def start_screen():
     start_screen_2.rect = start_screen_2.image.get_rect()
     start_screen_2.rect.x = 2180
     start_screen_2.rect.y = 0
+
+    filler_image = pygame.transform.scale(load_image('tiles/pink_filler_tile.png'), (1100, 32))
+    filler = pygame.sprite.Sprite(start_sprites)
+    filler.image = filler_image
+    filler.rect = filler.image.get_rect()
+    filler.rect.x = 0
+    filler.rect.y = 568
+
+    top_tile_image = pygame.transform.scale(load_image('tiles/pink_top_tile.png'), (1100, 32))
+    top_tile = pygame.sprite.Sprite(start_sprites)
+    top_tile.image = top_tile_image
+    top_tile.rect = top_tile.image.get_rect()
+    top_tile.rect.x = 0
+    top_tile.rect.y = 538
+
+    start_screen_alice = AnimatedSprite(start_sprites, start_sprites, \
+        pygame.transform.scale(load_image('alice/moving_D_fix.png'), (450, 165)), 4, 1, 910, 400)
+
     while True:
         screen.fill('white')
         start_sprites.draw(screen)
@@ -72,15 +90,24 @@ def start_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
+
+                # пока не работает
+                # while start_screen_alice.rect.x < 1150:
+                #     start_screen_alice.rect.x += 2
+                #     start_screen_alice.update()
+                #     pygame.display.flip()
+                #     clock.tick(FPS)
+
                 return
         if start_screen_1.rect.x > -2180:
-            start_screen_1.rect.x -= 1
+            start_screen_1.rect.x -= 2
         else:
             start_screen_1.rect.x += 2180
         if start_screen_2.rect.x > 0:
-            start_screen_2.rect.x -= 1
+            start_screen_2.rect.x -= 2
         else:
             start_screen_2.rect.x += 2180
+        start_screen_alice.update()
         pygame.display.flip()
         clock.tick(FPS)
 
