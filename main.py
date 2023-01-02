@@ -82,13 +82,18 @@ def start_screen():
     top_tile.rect.y = 538
 
     start_screen_alice = AnimatedSprite(start_sprites, start_sprites, \
-        pygame.transform.scale(load_image('alice/moving_D_fix.png'), (450, 165)), 4, 1, 910, 400)
+        pygame.transform.scale(load_image('alice/moving_D.png'), (450, 165)), 4, 1, 910, 400)
     pressed_start = False
 
-    player.play()
+    font = pygame.font.Font('data/fonts/orange kid.ttf', 20)
+    text = font.render('press any key', 1, '#ffffff')
+    
+
     while True:
         screen.fill('white')
         start_sprites.draw(screen)
+        if not pressed_start:
+            screen.blit(text, (40, 30))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -129,7 +134,7 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            player.switch_track('Loqiemean - Мартышка и технологии.mp3')
+            player.switch_track('Loqiemean - Вайолентово.mp3')
             player.play()
     pygame.display.flip()
     clock.tick(FPS)
