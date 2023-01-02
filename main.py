@@ -93,6 +93,7 @@ def start_screen():
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 pressed_start = True
+                pygame.mixer.Sound('data/sounds/click.wav').play()
 
         # движение фона стартового экрана
         if start_screen_1.rect.x > -2180 and not pressed_start:
