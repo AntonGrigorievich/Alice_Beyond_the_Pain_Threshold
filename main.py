@@ -13,7 +13,9 @@ pygame.display.set_caption('Beyond')
 FPS = 30
 clock = pygame.time.Clock()
 tile_width = tile_height = 50
-player = MusicPlayer('Loqiemean - Вайолентово.mp3')
+# Говно получилось ☹︎
+# либо иначе записать либо готовую музыку брать
+player = MusicPlayer('where.mp3')
 
 all_sprites = pygame.sprite.Group()
 start_sprites = pygame.sprite.Group()
@@ -83,6 +85,7 @@ def start_screen():
         pygame.transform.scale(load_image('alice/moving_D_fix.png'), (450, 165)), 4, 1, 910, 400)
     pressed_start = False
 
+    player.play()
     while True:
         screen.fill('white')
         start_sprites.draw(screen)
@@ -111,6 +114,7 @@ def start_screen():
             if start_screen_alice.rect.x < 1130:
                 start_screen_alice.rect.x += 3
             else:
+                player.pause()
                 return
 
         start_sprites.update()
