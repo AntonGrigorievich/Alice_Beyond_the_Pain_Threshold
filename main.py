@@ -3,23 +3,21 @@ import os
 import sys
 from music_player import MusicPlayer
 from animated_sprite import AnimatedSprite
+from coursor import Coursor
+from config import size, load_image, all_sprites, start_sprites, hero_sprites
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
 
-size = width, height = 1100, 600
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Beyond')
+pygame.mouse.set_visible(False)
+
 FPS = 30
 clock = pygame.time.Clock()
-tile_width = tile_height = 50
 # Говно получилось ☹︎
 # либо иначе записать либо готовую музыку брать
 player = MusicPlayer('where.mp3')
-
-all_sprites = pygame.sprite.Group()
-start_sprites = pygame.sprite.Group()
-hero_sprites = pygame.sprite.Group()
 
 settings = {
     'music_volume': 1,
@@ -31,26 +29,6 @@ settings = {
 def terminate():
     pygame.quit()
     sys.exit()
-
-
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    error_image = ''
-    try:
-        image = pygame.image.load(fullname)
-        if colorkey is not None:
-            image = image.convert()
-            if colorkey == -1:
-                colorkey = image.get_at((0, 0))
-            image.set_colorkey(colorkey)
-        else:
-            image = image.convert_alpha()
-        return image
-    except Exception:
-        # тут заменяем текстуру на error
-        # в случае если картинка не найдена
-        image = pygame.image.load(error_image)
-        return image
 
 
 def start_screen():
@@ -87,6 +65,8 @@ def start_screen():
 
     font = pygame.font.Font('data/fonts/orange kid.ttf', 20)
     text = font.render('press any key', 1, '#ffffff')
+
+    curs = Coursor(start_sprites)
     
 
     while True:
@@ -98,6 +78,8 @@ def start_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            elif event.type == pygame.MOUSEMOTION:
+                curs.update(event)
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 pressed_start = True
@@ -128,13 +110,17 @@ def start_screen():
 
 
 start_screen()
+curs = Coursor(all_sprites)
 while True:
     screen.fill('black')
+    all_sprites.draw(screen)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             player.switch_track('Loqiemean - Вайолентово.mp3')
             player.play()
+        elif event.type == pygame.MOUSEMOTION:
+            curs.update(event)
     pygame.display.flip()
     clock.tick(FPS)

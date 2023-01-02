@@ -1,5 +1,5 @@
 import pygame
-from main import load_image, all_sprites, \
+from config import all_sprites, load_image, \
     tile_height, tile_width
 
 class Tile(pygame.sprite.Sprite):

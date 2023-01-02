@@ -19,7 +19,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
                 self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
-    def update(self):
+    def update(self, *args):
         # +0.5 чтобы анимацию сделать медленнее (int(1,5) = 1)
         self.cur_frame = (self.cur_frame + 0.5) % len(self.frames)
         self.image = self.frames[int(self.cur_frame)]

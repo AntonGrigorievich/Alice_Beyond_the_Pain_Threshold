@@ -1,5 +1,5 @@
 import pygame
-from main import width, height, all_sprites, load_image
+from config import width, height, all_sprites, load_image
 import random
 
 

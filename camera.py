@@ -1,4 +1,4 @@
-from main import width, height
+from config import width, height
 
 
 class Camera:
