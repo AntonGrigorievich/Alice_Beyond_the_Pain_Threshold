@@ -5,6 +5,7 @@ from music_player import MusicPlayer
 from animated_sprite import AnimatedSprite
 from coursor import Coursor
 from config import size, load_image, all_sprites, start_sprites, hero_sprites
+from player import Hero
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -60,14 +61,14 @@ def start_screen():
     top_tile.rect.y = 538
 
     start_screen_alice = AnimatedSprite(start_sprites, start_sprites, \
-        pygame.transform.scale(load_image('alice/moving_D.png'), (450, 165)), 4, 1, 910, 400)
+                                        pygame.transform.scale(load_image('alice/moving_D.png'), (450, 165)), 4, 1, 910,
+                                        400)
     pressed_start = False
 
     font = pygame.font.Font('data/fonts/orange kid.ttf', 20)
-    text = font.render('press any key', 1, '#ffffff')
+    text = font.render('press any key', True, '#ffffff')
 
     curs = Coursor(start_sprites)
-    
 
     while True:
         screen.fill('white')
@@ -110,10 +111,10 @@ def start_screen():
 
 
 start_screen()
+character = Hero((100, 100))
 curs = Coursor(all_sprites)
 while True:
     screen.fill('black')
-    all_sprites.draw(screen)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
@@ -122,5 +123,9 @@ while True:
             player.play()
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
+
+    all_sprites.draw(screen)
+    all_sprites.update()
+
     pygame.display.flip()
     clock.tick(FPS)
