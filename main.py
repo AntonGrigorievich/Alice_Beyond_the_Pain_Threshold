@@ -1,5 +1,6 @@
 import pygame
 import os
+import time
 import sys
 from music_player import MusicPlayer
 from animated_sprite import AnimatedSprite
@@ -113,16 +114,23 @@ def start_screen():
 start_screen()
 character = Hero((100, 100))
 curs = Coursor(all_sprites)
+last_move = 0
 while True:
     screen.fill('black')
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            player.switch_track('Loqiemean - Вайолентово.mp3')
-            player.play()
+            character.sleepy = True
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
+        elif event.type == pygame.KEYDOWN:
+            last_move = time.time()
+
+    if time.time() - last_move >= 5:
+        character.sleepy = True
+    else:
+        character.sleepy = False
 
     all_sprites.draw(screen)
     all_sprites.update()
