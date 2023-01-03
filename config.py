@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 import os
 
@@ -13,21 +15,10 @@ hero_sprites = pygame.sprite.Group()
 block_group = pygame.sprite.Group()
 
 
-def load_image(name, colorkey=None):
+def load_image(name):
     fullname = os.path.join('data', name)
-    error_image = 'data/arrow.png'
-    try:
-        image = pygame.image.load(fullname)
-        if colorkey is not None:
-            image = image.convert()
-            if colorkey == -1:
-                colorkey = image.get_at((0, 0))
-            image.set_colorkey(colorkey)
-        else:
-            image = image.convert_alpha()
-        return image
-    except Exception:
-        # тут заменяем текстуру на error
-        # в случае если картинка не найдена
-        image = pygame.image.load(error_image)
-        return image
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image

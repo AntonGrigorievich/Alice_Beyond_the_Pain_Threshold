@@ -1,8 +1,9 @@
 import pygame
 from config import load_image
 
+
 class Coursor(pygame.sprite.Sprite):
-    image = load_image('arrow.png')
+    image = load_image("arrow.png")
 
     def __init__(self, *group):
         super().__init__(*group)
