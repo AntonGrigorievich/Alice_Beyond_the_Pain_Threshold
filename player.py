@@ -5,7 +5,7 @@ from config import load_image, all_sprites, hero_sprites, block_group
 class Hero(pygame.sprite.Sprite):
     # 37x56
     image = pygame.transform.scale(load_image("alice/stay_S.png"), (100, 116))
-    image_d = pygame.transform.scale(load_image("alice/stay_D.png"), (74, 112))
+    image_d = pygame.transform.scale(load_image("alice/stay_D.png"), (74, 110))
     image_a = pygame.transform.scale(load_image("alice/stay_A.png"), (74, 112))
     image_w = pygame.transform.scale(load_image("alice/stay_W.png"), (100, 116))
     image_s = pygame.transform.scale(load_image("alice/stay_S.png"), (100, 116))
