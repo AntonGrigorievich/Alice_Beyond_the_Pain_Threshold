@@ -5,8 +5,10 @@ import sys
 from music_player import MusicPlayer
 from animated_sprite import AnimatedSprite
 from coursor import Coursor
-from config import size, load_image, all_sprites, start_sprites, hero_sprites
 from player import Hero
+from map import Map
+from config import size, load_image, all_sprites, start_sprites, hero_sprites
+
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -112,6 +114,7 @@ def start_screen():
 
 
 start_screen()
+map = Map('test_map.tmx')
 character = Hero((100, 100))
 curs = Coursor(all_sprites)
 last_move = 0
@@ -132,6 +135,7 @@ while True:
     else:
         character.sleepy = False
 
+    map.render(screen)
     all_sprites.draw(screen)
     all_sprites.update()
 
