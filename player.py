@@ -4,11 +4,11 @@ from config import load_image, all_sprites, hero_sprites, block_group
 
 class Hero(pygame.sprite.Sprite):
     # 37x56
-    image = load_image("alice/stay_S.png")
-    image_d = load_image("alice/stay_D.png")
-    image_a = load_image("alice/stay_A.png")
-    image_w = load_image("alice/stay_W.png")
-    image_s = load_image("alice/stay_S.png")
+    image = pygame.transform.scale(load_image("alice/stay_S.png"), (100, 116))
+    image_d = pygame.transform.scale(load_image("alice/stay_D.png"), (74, 112))
+    image_a = pygame.transform.scale(load_image("alice/stay_A.png"), (74, 112))
+    image_w = pygame.transform.scale(load_image("alice/stay_W.png"), (100, 116))
+    image_s = pygame.transform.scale(load_image("alice/stay_S.png"), (100, 116))
 
     def __init__(self, position):
         super().__init__(hero_sprites, all_sprites)
@@ -26,32 +26,32 @@ class Hero(pygame.sprite.Sprite):
         self.frames_run_down = []
         self.frames_run_count_down = 0
         self.run_down = 'alice/moving_S.png'
-        self.cut_sheet(load_image(self.run_down), 4, 1, self.frames_run_down)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_down), (400, 116)), 4, 1, self.frames_run_down)
 
         self.frames_run_left = []
         self.frames_run_count_left = 0
         self.run_left = 'alice/moving_A.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.run_left), (148, 56)), 4, 1, self.frames_run_left)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_left), (298, 112)), 4, 1, self.frames_run_left)
 
         self.frames_run_right = []
         self.frames_run_count_right = 0
         self.run_right = 'alice/moving_D.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.run_right), (148, 56)), 4, 1, self.frames_run_right)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_right), (298, 112)), 4, 1, self.frames_run_right)
 
         self.frames_run_up = []
         self.frames_run_count_up = 0
         self.run_up = 'alice/moving_W.png'
-        self.cut_sheet(load_image(self.run_up), 4, 1, self.frames_run_up)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_up), (400, 116)), 4, 1, self.frames_run_up)
 
         self.frames_falling_asleep = []
         self.frames_falling_asleep_count = 0
         self.falling_asleep = 'alice/sleep/falling_asleep.png'
-        self.cut_sheet(load_image(self.falling_asleep), 5, 1, self.frames_falling_asleep)
+        self.cut_sheet(pygame.transform.scale(load_image(self.falling_asleep), (520, 116)), 5, 1, self.frames_falling_asleep)
 
         self.frames_sleeping = []
         self.frames_sleeping_count = 0
         self.sleeping = 'alice/sleep/sleeping.png'
-        self.cut_sheet(load_image(self.sleeping), 3, 1, self.frames_sleeping)
+        self.cut_sheet(pygame.transform.scale(load_image(self.sleeping), (312, 116)), 3, 1, self.frames_sleeping)
 
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)

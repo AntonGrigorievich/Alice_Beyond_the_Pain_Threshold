@@ -4,6 +4,7 @@ import time
 import sys
 from music_player import MusicPlayer
 from animated_sprite import AnimatedSprite
+from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
@@ -138,6 +139,7 @@ while True:
     map.render(screen)
     all_sprites.draw(screen)
     all_sprites.update()
+
 
     pygame.display.flip()
     clock.tick(FPS)
