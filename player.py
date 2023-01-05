@@ -15,7 +15,7 @@ class Hero(pygame.sprite.Sprite):
         # self.map = map
         # self.map_size = self.map.get_size_map()
         self.size = (37, 56)
-        self.health_point = 100
+        self.health = 4
         self.speed = 4
         self.direction = 's'
         self.idle()
@@ -31,12 +31,12 @@ class Hero(pygame.sprite.Sprite):
         self.frames_run_left = []
         self.frames_run_count_left = 0
         self.run_left = 'alice/moving_A.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.run_left), (298, 112)), 4, 1, self.frames_run_left)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_left), (300, 112)), 4, 1, self.frames_run_left)
 
         self.frames_run_right = []
         self.frames_run_count_right = 0
         self.run_right = 'alice/moving_D.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.run_right), (298, 112)), 4, 1, self.frames_run_right)
+        self.cut_sheet(pygame.transform.scale(load_image(self.run_right), (300, 112)), 4, 1, self.frames_run_right)
 
         self.frames_run_up = []
         self.frames_run_count_up = 0
@@ -173,4 +173,13 @@ class Hero(pygame.sprite.Sprite):
         if self.sleepy:
             self.fall_sleep()
             self.sleep()
-            
+
+        # не отображается уменьшение здоровья
+        # создание новых спрайтов при каждом обновлении. Переделать
+        for hp in range(self.health):
+            heart = pygame.sprite.Sprite()
+            heart.image = pygame.transform.scale(load_image('heart.png'), (48, 40))
+            heart.rect = heart.image.get_rect()
+            all_sprites.add(heart)
+            heart.rect.y = 10
+            heart.rect.x = hp * 50

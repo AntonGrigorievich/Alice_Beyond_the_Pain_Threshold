@@ -125,7 +125,8 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            character.sleepy = True
+            character.health += 1
+            print(character.health)
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
