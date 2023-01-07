@@ -5,8 +5,8 @@ class MusicPlayer:
     def __init__(self, filename):
         pygame.mixer.music.load(os.path.join('data/music', filename))
 
-    def play(self):
-        pygame.mixer.music.play(-1, 0.0, 1)
+    def play(self, start_point):
+        pygame.mixer.music.play(-1, start_point, 1)
 
     def pause(self):
         pygame.mixer.music.pause()

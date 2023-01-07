@@ -1,5 +1,5 @@
 import pygame
-import os
+import random
 import time
 import sys
 from music_player import MusicPlayer
@@ -20,21 +20,21 @@ pygame.mouse.set_visible(False)
 
 FPS = 30
 clock = pygame.time.Clock()
-# Говно получилось ☹︎
-# либо иначе записать либо готовую музыку брать
-player = MusicPlayer('Whos Ready for Tomorrow.mp3')
 
-settings = {
-    'music_volume': 1,
-    'sounds_volume': 1,
-    'difficulty': 'normal',
+start_screen_songs_set = [
+    'temperatura',
+    'plenka',
+]
+songs_start_point = {
+    'temperatura.mp3': 14.0,
+    'plenka.mp3': 4.0,
 }
-
+track = f'{random.choice(start_screen_songs_set)}.mp3'
+player = MusicPlayer(track)
 
 def terminate():
     pygame.quit()
     sys.exit()
-
 
 def start_screen():
     start_image = load_image('start_background.png')
@@ -73,6 +73,9 @@ def start_screen():
     text = font.render('press any key', True, '#ffffff')
 
     curs = Coursor(start_sprites)
+
+    player.set_volume(0.4)
+    player.play(songs_start_point[track])
 
     while True:
         screen.fill('white')
@@ -119,9 +122,12 @@ map = Map('test_map.tmx')
 character = Hero((100, 100))
 curs = Coursor(coursor_group)
 camera = Camera()
+
+# пока хз как мапу нормально отрисовать
+map.render(screen)
 last_move = 0
-player.set_volume(0.2)
-player.play()
+player.set_volume(0.4)
+player.play(0.0)
 while True:
     screen.fill('black')
     for event in pygame.event.get():
@@ -139,7 +145,6 @@ while True:
     else:
         character.sleepy = False
 
-    map.render(screen)
     all_sprites.draw(screen)
     all_sprites.update()
     coursor_group.draw(screen)
