@@ -1,7 +1,5 @@
 import pygame
 import pytmx
-from config import all_sprites
-from tile import Tile
 
 class Map:
     def __init__(self, filename):
@@ -10,18 +8,16 @@ class Map:
         self.width = self.map.width
         self.tilesize = self.map.tilewidth
 
-    def render(self, screen):
+    def render(self, group):
         for y in range(self.height):
             for x in range(self.width):
                 # image = self.map.get_tile_image(x, y, 0)
                 # screen.blit(image, (x * self.tilesize, y * self.tilesize))
-                tile = pygame.sprite.Sprite(all_sprites)
+                tile = pygame.sprite.Sprite(group)
                 tile.image = self.map.get_tile_image(x, y, 0)
                 tile.rect = tile.image.get_rect()
-                tile.rect.move(
-                    x * self.tilesize, y * self.tilesize
-                )
-                tile
+                tile.rect.x = x * self.tilesize
+                tile.rect.y = y * self.tilesize
 
     def get_tile_id(self, pos):
         return self.map.tiledgidmap[self.map.get_tile_gid(*pos, 0)]

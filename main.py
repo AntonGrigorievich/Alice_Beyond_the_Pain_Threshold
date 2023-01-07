@@ -24,10 +24,14 @@ clock = pygame.time.Clock()
 start_screen_songs_set = [
     'temperatura',
     'plenka',
+    'Descend',
+    'On the Run',
 ]
 songs_start_point = {
     'temperatura.mp3': 14.0,
     'plenka.mp3': 4.0,
+    'Descend.mp3': 0.0,
+    'On the Run.mp3': 0.0,
 }
 track = f'{random.choice(start_screen_songs_set)}.mp3'
 player = MusicPlayer(track)
@@ -74,7 +78,7 @@ def start_screen():
 
     curs = Coursor(start_sprites)
 
-    player.set_volume(0.4)
+    player.set_volume(0.3)
     player.play(songs_start_point[track])
 
     while True:
@@ -124,9 +128,9 @@ curs = Coursor(coursor_group)
 camera = Camera()
 
 # пока хз как мапу нормально отрисовать
-map.render(screen)
+map.render(all_sprites)
 last_move = 0
-player.set_volume(0.4)
+player.set_volume(0.3)
 player.play(0.0)
 while True:
     screen.fill('black')
@@ -147,6 +151,7 @@ while True:
 
     all_sprites.draw(screen)
     all_sprites.update()
+    hero_sprites.draw(screen)
     coursor_group.draw(screen)
     camera.update(character)
     for sprite in all_sprites:
