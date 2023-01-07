@@ -8,7 +8,7 @@ from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
-from config import size, load_image, all_sprites, start_sprites, hero_sprites
+from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group
 
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
@@ -22,7 +22,7 @@ FPS = 30
 clock = pygame.time.Clock()
 # Говно получилось ☹︎
 # либо иначе записать либо готовую музыку брать
-player = MusicPlayer('where.mp3')
+player = MusicPlayer('Whos Ready for Tomorrow.mp3')
 
 settings = {
     'music_volume': 1,
@@ -106,7 +106,7 @@ def start_screen():
             if start_screen_alice.rect.x < 1130:
                 start_screen_alice.rect.x += 3
             else:
-                player.pause()
+                player.switch_track('Whos Ready for Tomorrow.mp3')
                 return
 
         start_sprites.update()
@@ -117,16 +117,18 @@ def start_screen():
 start_screen()
 map = Map('test_map.tmx')
 character = Hero((100, 100))
-curs = Coursor(all_sprites)
+curs = Coursor(coursor_group)
+camera = Camera()
 last_move = 0
+player.set_volume(0.2)
+player.play()
 while True:
     screen.fill('black')
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            character.health += 1
-            print(character.health)
+            pass
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
@@ -140,6 +142,10 @@ while True:
     map.render(screen)
     all_sprites.draw(screen)
     all_sprites.update()
+    coursor_group.draw(screen)
+    camera.update(character)
+    for sprite in all_sprites:
+        camera.apply(sprite)
 
 
     pygame.display.flip()

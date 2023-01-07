@@ -173,13 +173,3 @@ class Hero(pygame.sprite.Sprite):
         if self.sleepy:
             self.fall_sleep()
             self.sleep()
-
-        # не отображается уменьшение здоровья
-        # создание новых спрайтов при каждом обновлении. Переделать
-        for hp in range(self.health):
-            heart = pygame.sprite.Sprite()
-            heart.image = pygame.transform.scale(load_image('heart.png'), (48, 40))
-            heart.rect = heart.image.get_rect()
-            all_sprites.add(heart)
-            heart.rect.y = 10
-            heart.rect.x = hp * 50
