@@ -8,8 +8,8 @@ from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
-from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group
-
+from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group
+from mob import Mob
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -36,9 +36,11 @@ songs_start_point = {
 track = f'{random.choice(start_screen_songs_set)}.mp3'
 player = MusicPlayer(track)
 
+
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 def start_screen():
     start_image = load_image('start_background.png')
@@ -124,6 +126,7 @@ def start_screen():
 start_screen()
 map = Map('test_map.tmx')
 character = Hero((100, 100))
+enemy = Mob(0, 0, character)
 curs = Coursor(coursor_group)
 camera = Camera()
 
@@ -151,12 +154,10 @@ while True:
 
     all_sprites.draw(screen)
     all_sprites.update()
-    hero_sprites.draw(screen)
     coursor_group.draw(screen)
     camera.update(character)
     for sprite in all_sprites:
         camera.apply(sprite)
-
 
     pygame.display.flip()
     clock.tick(FPS)

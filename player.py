@@ -47,7 +47,8 @@ class Hero(pygame.sprite.Sprite):
         self.frames_falling_asleep = []
         self.frames_falling_asleep_count = 0
         self.falling_asleep = 'alice/sleep/falling_asleep.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.falling_asleep), (520, 116)), 5, 1, self.frames_falling_asleep)
+        self.cut_sheet(pygame.transform.scale(load_image(self.falling_asleep), (520, 116)), 5, 1,
+                       self.frames_falling_asleep)
 
         self.frames_sleeping = []
         self.frames_sleeping_count = 0
@@ -129,7 +130,7 @@ class Hero(pygame.sprite.Sprite):
         elif keys[pygame.K_a] and keys[pygame.K_w]:
             self.direction = 'aw'
             self.frames_run_count_down, self.frames_run_up = self.animated_move(self.frames_run_count_down,
-                                                                                  self.frames_run_up)
+                                                                                self.frames_run_up)
             self.rect.x -= self.speed
             self.rect.y -= self.speed
             if pygame.sprite.spritecollideany(self, block_group):
@@ -197,13 +198,14 @@ class Hero(pygame.sprite.Sprite):
 
     def fall_sleep(self):
         if self.direction == 's':
-            self.frames_falling_asleep_count, self.frames_falling_asleep = self.animated_move(self.frames_falling_asleep_count,
-                                                                                          self.frames_falling_asleep)
+            self.frames_falling_asleep_count, self.frames_falling_asleep = self.animated_move(
+                self.frames_falling_asleep_count,
+                self.frames_falling_asleep)
 
     def sleep(self):
         if self.direction == 's':
             self.frames_sleeping_count, self.frames_sleeping = self.animated_move(self.frames_sleeping_count,
-                                                                                      self.frames_sleeping)
+                                                                                  self.frames_sleeping)
 
     def update(self, *args, **kwargs):
         self.idle()

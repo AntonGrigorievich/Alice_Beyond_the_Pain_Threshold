@@ -14,6 +14,7 @@ start_sprites = pygame.sprite.Group()
 hero_sprites = pygame.sprite.Group()
 block_group = pygame.sprite.Group()
 coursor_group = pygame.sprite.Group()
+mob_group = pygame.sprite.Group()
 
 
 def load_image(name):
