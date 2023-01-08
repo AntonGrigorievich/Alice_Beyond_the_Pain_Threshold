@@ -22,6 +22,7 @@ class Hero(pygame.sprite.Sprite):
         self.timer = 0
         self.x, self.y = position
         self.sleepy = False
+        self.damaged = False
 
         self.frames_run_down = []
         self.frames_run_count_down = 0
@@ -52,6 +53,26 @@ class Hero(pygame.sprite.Sprite):
         self.frames_sleeping_count = 0
         self.sleeping = 'alice/sleep/sleeping.png'
         self.cut_sheet(pygame.transform.scale(load_image(self.sleeping), (312, 116)), 3, 1, self.frames_sleeping)
+
+        self.frames_hurt_right = []
+        self.frames_hurt_right_count = 0
+        self.hurt_right = 'alice/hurt_D.png'
+        self.cut_sheet(pygame.transform.scale(load_image(self.hurt_right), (152, 112)), 2, 1, self.frames_hurt_right)
+
+        self.frames_hurt_left = []
+        self.frames_hurt_left_count = 0
+        self.hurt_left = 'alice/hurt_A.png'
+        self.cut_sheet(pygame.transform.scale(load_image(self.hurt_left), (152, 112)), 2, 1, self.frames_hurt_left)
+
+        self.frames_hurt_down = []
+        self.frames_hurt_down_count = 0
+        self.hurt_down = 'alice/hurt_S.png'
+        self.cut_sheet(pygame.transform.scale(load_image(self.hurt_down), (196, 116)), 2, 1, self.frames_hurt_down)
+
+        self.frames_hurt_up = []
+        self.frames_hurt_up_count = 0
+        self.hurt_up = 'alice/hurt_W.png'
+        self.cut_sheet(pygame.transform.scale(load_image(self.hurt_up), (196, 116)), 2, 1, self.frames_hurt_up)
 
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)
@@ -157,6 +178,23 @@ class Hero(pygame.sprite.Sprite):
             if pygame.sprite.spritecollideany(self, block_group):
                 self.rect.y -= self.speed
 
+    def get_damage(self):
+        self.health -= 1
+        pygame.mixer.Sound('data/sounds/hurt.wav').play()
+        if self.direction == 'd':
+            self.frames_hurt_right_count, self.frames_hurt_right = self.animated_move(self.frames_hurt_right_count,
+                                                                                      self.frames_hurt_right)
+        elif self.direction == 'a':
+            self.frames_hurt_left_count, self.frames_hurt_left = self.animated_move(self.frames_hurt_left_count,
+                                                                                    self.frames_hurt_left)
+        elif self.direction == 's':
+            self.frames_hurt_down_count, self.frames_hurt_down = self.animated_move(self.frames_hurt_down_count,
+                                                                                    self.frames_hurt_down)
+        elif self.direction == 'w':
+            self.frames_hurt_up_count, self.frames_hurt_up = self.animated_move(self.frames_hurt_up_count,
+                                                                                self.frames_hurt_up)
+
+
     def fall_sleep(self):
         if self.direction == 's':
             self.frames_falling_asleep_count, self.frames_falling_asleep = self.animated_move(self.frames_falling_asleep_count,
@@ -173,3 +211,6 @@ class Hero(pygame.sprite.Sprite):
         if self.sleepy:
             self.fall_sleep()
             self.sleep()
+        if self.damaged:
+            self.damaged = False
+            self.get_damage()

@@ -28,7 +28,7 @@ start_screen_songs_set = [
     'On the Run',
 ]
 songs_start_point = {
-    'temperatura.mp3': 14.0,
+    'temperatura.mp3': 16.0,
     'plenka.mp3': 4.0,
     'Descend.mp3': 0.0,
     'On the Run.mp3': 0.0,
@@ -78,7 +78,7 @@ def start_screen():
 
     curs = Coursor(start_sprites)
 
-    player.set_volume(0.3)
+    player.set_volume(0.5)
     player.play(songs_start_point[track])
 
     while True:
@@ -138,7 +138,7 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            pass
+            character.damaged = True
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
