@@ -130,7 +130,6 @@ enemy = Mob(0, 0, character)
 curs = Coursor(coursor_group)
 camera = Camera()
 
-# пока хз как мапу нормально отрисовать
 map.render(all_sprites)
 last_move = 0
 player.set_volume(0.3)
@@ -154,6 +153,8 @@ while True:
 
     all_sprites.draw(screen)
     all_sprites.update()
+    mob_group.draw(screen)
+    hero_sprites.draw(screen)
     coursor_group.draw(screen)
     camera.update(character)
     for sprite in all_sprites:
