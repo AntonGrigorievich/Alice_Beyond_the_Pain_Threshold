@@ -9,7 +9,8 @@ from coursor import Coursor
 from player import Hero
 from map import Map
 from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group
-from mob import Mob
+from mob_near import MobNear
+from mob_far import MobFar
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -126,10 +127,10 @@ def start_screen():
 start_screen()
 map = Map('test_map.tmx')
 character = Hero((100, 100))
-enemy = Mob(0, 0, character)
+enemy = MobNear(0, 0, character)
+enemy2 = MobFar(400, 100, character)
 curs = Coursor(coursor_group)
 camera = Camera()
-
 map.render(all_sprites)
 last_move = 0
 player.set_volume(0.3)

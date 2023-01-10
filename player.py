@@ -78,7 +78,8 @@ class Hero(pygame.sprite.Sprite):
         self.frames_attack_right = []
         self.frames_attack_right_count = 0
         self.attack_right = 'alice/attack_D.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1, self.frames_attack_right)
+        self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
+                       self.frames_attack_right)
 
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)
@@ -186,9 +187,10 @@ class Hero(pygame.sprite.Sprite):
 
     def attack(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_l]:
-            self.frames_attack_right_count, self.frames_attack_right = self.animated_move(self.frames_attack_right_count,
-                                                                                          self.frames_attack_right)
+        if keys[pygame.K_1]:
+            self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
+                self.frames_attack_right_count,
+                self.frames_attack_right)
 
     def get_damage(self):
         self.health -= 1
@@ -205,7 +207,6 @@ class Hero(pygame.sprite.Sprite):
         elif self.direction == 'w':
             self.frames_hurt_up_count, self.frames_hurt_up = self.animated_move(self.frames_hurt_up_count,
                                                                                 self.frames_hurt_up)
-
 
     def fall_sleep(self):
         if self.direction == 's':
