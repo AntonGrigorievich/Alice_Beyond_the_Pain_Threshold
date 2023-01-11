@@ -8,7 +8,7 @@ from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
-from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group
+from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group
 from mob_near import MobNear
 from mob_far import MobFar
 
@@ -131,7 +131,7 @@ enemy = MobNear(0, 0, character)
 enemy2 = MobFar(400, 100, character)
 curs = Coursor(coursor_group)
 camera = Camera()
-map.render(all_sprites)
+map.render(all_sprites, block_group)
 last_move = 0
 player.set_volume(0.3)
 player.play(0.0)
