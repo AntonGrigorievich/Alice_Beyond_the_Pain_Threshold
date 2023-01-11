@@ -16,7 +16,7 @@ class Hero(pygame.sprite.Sprite):
         # self.map_size = self.map.get_size_map()
         self.size = (37, 56)
         self.health = 4
-        self.speed = 4
+        self.speed = 10
         self.direction = 's'
         self.idle()
         self.timer = 0
@@ -75,11 +75,11 @@ class Hero(pygame.sprite.Sprite):
         self.hurt_up = 'alice/hurt_W.png'
         self.cut_sheet(pygame.transform.scale(load_image(self.hurt_up), (196, 116)), 2, 1, self.frames_hurt_up)
 
-        self.frames_attack_right = []
-        self.frames_attack_right_count = 0
-        self.attack_right = 'alice/attack_D.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
-                       self.frames_attack_right)
+        # self.frames_attack_right = []
+        # self.frames_attack_right_count = 0
+        # self.attack_right = 'alice/attack_D.png'
+        # self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
+        #                self.frames_attack_right)
 
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)
@@ -187,7 +187,7 @@ class Hero(pygame.sprite.Sprite):
 
     def attack(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_1]:
+        if keys[pygame.K_l]:
             self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
                 self.frames_attack_right_count,
                 self.frames_attack_right)

@@ -125,13 +125,21 @@ def start_screen():
 
 
 start_screen()
-map = Map('test_map.tmx')
+
+# map = Map('test_map.tmx')
+
+infinite_map = Map('infinite_round_map.tmx')
+
 character = Hero((100, 100))
 enemy = MobNear(0, 0, character)
 enemy2 = MobFar(400, 100, character)
 curs = Coursor(coursor_group)
 camera = Camera()
-map.render(all_sprites, block_group)
+
+# map.render(all_sprites, block_group)
+
+infinite_map.render(all_sprites, block_group)
+
 last_move = 0
 player.set_volume(0.3)
 player.play(0.0)

@@ -9,7 +9,9 @@ class Map:
         self.tilesize = self.map.tilewidth
 
     def render(self, group, block_group):
-        walls_id = [1, 9, 13]
+        walls_id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                    33, 35, 36, 38, 39, 41, 42, 44,
+                    64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76]
         for y in range(self.height):
             for x in range(self.width):
                 tile = pygame.sprite.Sprite()
