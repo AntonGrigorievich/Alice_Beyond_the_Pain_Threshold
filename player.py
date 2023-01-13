@@ -10,12 +10,12 @@ class Hero(pygame.sprite.Sprite):
     image_w = pygame.transform.scale(load_image("alice/stay_W.png"), (100, 116))
     image_s = pygame.transform.scale(load_image("alice/stay_S.png"), (100, 116))
 
-    def __init__(self, position):
+    def __init__(self, position, screen):
         super().__init__(hero_sprites, all_sprites)
         # self.map = map
         # self.map_size = self.map.get_size_map()
         self.size = (37, 56)
-        self.health = 4
+        self.health = 10
         self.speed = 10
         self.direction = 's'
         self.idle()
@@ -23,6 +23,7 @@ class Hero(pygame.sprite.Sprite):
         self.x, self.y = position
         self.sleepy = False
         self.damaged = False
+        self.win = screen
 
         self.frames_run_down = []
         self.frames_run_count_down = 0
@@ -75,11 +76,11 @@ class Hero(pygame.sprite.Sprite):
         self.hurt_up = 'alice/hurt_W.png'
         self.cut_sheet(pygame.transform.scale(load_image(self.hurt_up), (196, 116)), 2, 1, self.frames_hurt_up)
 
-        # self.frames_attack_right = []
-        # self.frames_attack_right_count = 0
-        # self.attack_right = 'alice/attack_D.png'
-        # self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
-        #                self.frames_attack_right)
+        self.frames_attack_right = []
+        self.frames_attack_right_count = 0
+        self.attack_right = 'alice/attack_D.png'
+        self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
+                       self.frames_attack_right)
 
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)
@@ -112,6 +113,9 @@ class Hero(pygame.sprite.Sprite):
         return self.direction
 
     def move(self):
+        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx-50, self.rect.y - 20, 50, 10))  # NEW
+        pygame.draw.rect(self.win, (0, 128, 0),
+                         (self.rect.centerx-50, self.rect.y - 20, 50 - (5 * (10 - self.health)), 10))  # NEW
         keys = pygame.key.get_pressed()
         if keys[pygame.K_d] and keys[pygame.K_w]:
             self.direction = 'dw'

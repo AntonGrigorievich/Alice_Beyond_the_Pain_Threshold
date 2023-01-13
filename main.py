@@ -130,9 +130,8 @@ start_screen()
 
 infinite_map = Map('infinite_round_map.tmx')
 
-character = Hero((100, 100))
-enemy = MobNear(0, 0, character)
-enemy2 = MobFar(400, 100, character)
+lst_enemy = []
+character = Hero((100, 100), screen)
 curs = Coursor(coursor_group)
 camera = Camera()
 
@@ -145,6 +144,9 @@ player.set_volume(0.3)
 player.play(0.0)
 while True:
     screen.fill('black')
+    if len(lst_enemy) < 5:
+        for i in range(5):
+            lst_enemy.append(MobNear(200 * i, 0, character))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
@@ -168,6 +170,5 @@ while True:
     camera.update(character)
     for sprite in all_sprites:
         camera.apply(sprite)
-
     pygame.display.flip()
     clock.tick(FPS)

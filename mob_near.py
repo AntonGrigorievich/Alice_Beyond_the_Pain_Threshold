@@ -16,7 +16,7 @@ class MobNear(pygame.sprite.Sprite):
         self.is_alive = True
         self.is_free = True
         self.direction = 'a'
-        self.dist = 150
+        self.dist = 200
 
         self.frames_run_left = []
         self.frames_run_count_left = 0
@@ -71,7 +71,6 @@ class MobNear(pygame.sprite.Sprite):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
                 frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
-                frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
     def animated_move(self, frames_run_count, frames_run):
         frames_run_count = (frames_run_count + 1) % len(frames_run)
@@ -97,6 +96,14 @@ class MobNear(pygame.sprite.Sprite):
             elif self.direction == 'd':
                 self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
                     self.frames_attack_right_count, self.frames_attack_right)
+            if len(self.frames_attack_right) == self.frames_attack_right_count + 1 or len(
+                    self.frames_attack_left) == self.frames_attack_left_count + 1:
+                self.character.health -= 1
+                self.character.damaged = True
+            print(self.character.health, self.direction)
+        else:
+            self.frames_attack_left_count = 0
+            self.frames_attack_right_count = 0
 
     def idle(self):
         if self.is_free:
@@ -144,12 +151,14 @@ class MobNear(pygame.sprite.Sprite):
 
                 elif self.rect.centery != pos[1]:
                     if self.rect.centery < pos[1]:
+                        self.direction = 'a'
                         self.frames_run_count_right, self.frames_run_right = self.animated_move(
                             self.frames_run_count_right,
                             self.frames_run_right)
                         self.rect.centery += self.speed
 
                     elif self.rect.centery > pos[1]:
+                        self.direction = 'a'
                         self.frames_run_count_right, self.frames_run_right = self.animated_move(
                             self.frames_run_count_right,
                             self.frames_run_right)

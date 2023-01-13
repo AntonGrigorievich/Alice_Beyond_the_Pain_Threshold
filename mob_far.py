@@ -1,11 +1,14 @@
+import time
+
 import pygame
 from config import load_image, all_sprites, mob_group, hero_sprites
+from enemy_bullet import Bullet
 
 
 class MobFar(pygame.sprite.Sprite):
     image = pygame.transform.scale(load_image("mob/enemy_far/wizard_stay.png"), (120, 160))
 
-    def __init__(self, x, y, hero):
+    def __init__(self, x, y, hero, screen):
         super().__init__(mob_group, all_sprites)
         self.image = MobFar.image
         self.mask = pygame.mask.from_surface(self.image)
@@ -17,6 +20,9 @@ class MobFar(pygame.sprite.Sprite):
         self.is_free = True
         self.direction = 'a'
         self.dist = 150
+        self.timer = 0
+        self.screen = screen
+        self.bullets = []
 
         self.frames_run_left = []
         self.frames_run_count_left = 0
@@ -88,14 +94,14 @@ class MobFar(pygame.sprite.Sprite):
                 self.frames_death_left_count, self.frames_death_left = self.animated_move(
                     self.frames_death_left_count, self.frames_death_left)
 
-    # def attack(self):
-    #     if pygame.sprite.spritecollideany(self, hero_sprites) and self.is_alive:
-    #         if self.direction == 'a':
-    #             self.frames_attack_left_count, self.frames_attack_left = self.animated_move(
-    #                 self.frames_attack_left_count, self.frames_attack_left)
-    #         elif self.direction == 'd':
-    #             self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
-    #                 self.frames_attack_right_count, self.frames_attack_right)
+    def attack(self):
+        self.bullets.append(Bullet(*self.rect.center, *self.character.rect.center))
+        for bullet in self.bullets[:]:
+            bullet.update()
+            if not self.screen.get_rect().collidepoint(bullet.pos):
+                self.bullets.remove(bullet)
+        for bullet in self.bullets:
+            bullet.draw(self.screen)
 
     def idle(self):
         if self.is_free:
@@ -173,3 +179,4 @@ class MobFar(pygame.sprite.Sprite):
     def update(self, *args, **kwargs):
         self.idle()
         self.move()
+        self.attack()
