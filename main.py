@@ -8,7 +8,7 @@ from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
-from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group
+from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group, weapon_group
 from mob_near import MobNear
 from mob_far import MobFar
 
@@ -73,7 +73,7 @@ def start_screen():
 
     start_screen_alice = AnimatedSprite(start_sprites, start_sprites, \
                                         pygame.transform.scale(load_image('alice/moving_D.png'), (450, 165)), 4, 1, 910,
-                                        400)
+                                        400, 0.5)
     pressed_start = False
 
     font = pygame.font.Font('data/fonts/orange kid.ttf', 20)
@@ -166,6 +166,8 @@ while True:
     all_sprites.update()
     mob_group.draw(screen)
     hero_sprites.draw(screen)
+    weapon_group.draw(screen)
+    weapon_group.update(screen)
     coursor_group.draw(screen)
     camera.update(character)
     for sprite in all_sprites:

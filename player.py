@@ -1,5 +1,6 @@
 import pygame
-from config import load_image, all_sprites, hero_sprites, block_group
+from config import load_image, all_sprites, hero_sprites, block_group, weapon_group
+from animated_sprite import AnimatedSprite
 
 
 class Hero(pygame.sprite.Sprite):
@@ -23,6 +24,8 @@ class Hero(pygame.sprite.Sprite):
         self.x, self.y = position
         self.sleepy = False
         self.damaged = False
+        self.attacking = False
+        self.bash = None
         self.win = screen
 
         self.frames_run_down = []
@@ -76,12 +79,6 @@ class Hero(pygame.sprite.Sprite):
         self.hurt_up = 'alice/hurt_W.png'
         self.cut_sheet(pygame.transform.scale(load_image(self.hurt_up), (196, 116)), 2, 1, self.frames_hurt_up)
 
-        self.frames_attack_right = []
-        self.frames_attack_right_count = 0
-        self.attack_right = 'alice/attack_D.png'
-        self.cut_sheet(pygame.transform.scale(load_image(self.attack_right), (760, 112)), 5, 1,
-                       self.frames_attack_right)
-
     def cut_sheet(self, sheet, columns, rows, frames):
         self.rect = pygame.Rect(self.x, self.y, sheet.get_width() // columns, sheet.get_height() // rows)
         for j in range(rows):
@@ -113,9 +110,9 @@ class Hero(pygame.sprite.Sprite):
         return self.direction
 
     def move(self):
-        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx-50, self.rect.y - 20, 50, 10))  # NEW
+        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx-30, self.rect.y - 20, 50, 10))  # NEW
         pygame.draw.rect(self.win, (0, 128, 0),
-                         (self.rect.centerx-50, self.rect.y - 20, 50 - (5 * (10 - self.health)), 10))  # NEW
+                         (self.rect.centerx-30, self.rect.y - 20, 50 - (5 * (10 - self.health)), 10))  # NEW
         keys = pygame.key.get_pressed()
         if keys[pygame.K_d] and keys[pygame.K_w]:
             self.direction = 'dw'
@@ -192,9 +189,26 @@ class Hero(pygame.sprite.Sprite):
     def attack(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_l]:
-            self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
-                self.frames_attack_right_count,
-                self.frames_attack_right)
+            # self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
+            #     self.frames_attack_right_count,
+            #     self.frames_attack_right)
+            if not(self.bash):
+                self.attacking = True
+                self.bash = AnimatedSprite(weapon_group, all_sprites,
+                                    pygame.transform.scale(load_image('alice/attack_D.png'), (760, 110)),
+                                    3, 1, 520, 240, 1)
+                hero_sprites.add(self.bash)
+                all_sprites.remove(self.bash)
+
+        elif keys[pygame.K_j]:
+            if not(self.bash):
+                self.attacking = True
+                self.bash = AnimatedSprite(weapon_group, all_sprites,
+                                    pygame.transform.scale(load_image('alice/attack_A.png'), (760, 110)),
+                                    3, 1, 390, 265, 1)
+                hero_sprites.add(self.bash)
+                all_sprites.remove(self.bash)
+
 
     def get_damage(self):
         self.health -= 1
@@ -233,3 +247,8 @@ class Hero(pygame.sprite.Sprite):
         if self.damaged:
             self.damaged = False
             self.get_damage()
+        if self.attacking:
+            if self.bash.cur_frame >= 6:
+                self.bash.kill()
+                self.attacking = False
+                self.bash = False
