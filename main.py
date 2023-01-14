@@ -146,7 +146,7 @@ while True:
     screen.fill('black')
     if len(lst_enemy) < 5:
         for i in range(5):
-            lst_enemy.append(MobNear(200 * i, 0, character))
+            lst_enemy.append(MobNear(200 * i, 0, character, screen))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()

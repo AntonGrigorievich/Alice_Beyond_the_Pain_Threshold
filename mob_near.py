@@ -5,11 +5,11 @@ from config import load_image, all_sprites, mob_group, hero_sprites, weapon_grou
 class MobNear(pygame.sprite.Sprite):
     image = pygame.transform.scale(load_image("mob/enemy_near/enemy_stay.png"), (100, 100))
 
-    def __init__(self, x, y, hero):
+    def __init__(self, x, y, hero, screen):
         super().__init__(mob_group, all_sprites)
         self.image = MobNear.image
         self.mask = pygame.mask.from_surface(self.image)
-        self.hp = 60
+        self.hp = 10
         self.speed = 2.5
         self.x, self.y = x, y
         self.character = hero
@@ -19,6 +19,7 @@ class MobNear(pygame.sprite.Sprite):
         self.dist = 200
         self.hurt = pygame.mixer.Sound('data/sounds/enemy_hurt.wav')
         self.hurt.set_volume(0.1)
+        self.win = screen
 
         self.frames_run_left = []
         self.frames_run_count_left = 0
@@ -84,12 +85,17 @@ class MobNear(pygame.sprite.Sprite):
         self.hp -= hp
         if self.hp <= 0:
             self.is_alive = False
-            if self.direction == 'd':
-                self.frames_death_right_count, self.frames_death_right = self.animated_move(
-                    self.frames_death_right_count, self.frames_death_right)
-            elif self.direction == 'a':
-                self.frames_death_left_count, self.frames_death_left = self.animated_move(
-                    self.frames_death_left_count, self.frames_death_left)
+
+    def death(self):
+        if self.direction == 'd':
+            self.frames_death_right_count, self.frames_death_right = self.animated_move(
+                self.frames_death_right_count, self.frames_death_right)
+        elif self.direction == 'a':
+            self.frames_death_left_count, self.frames_death_left = self.animated_move(
+                self.frames_death_left_count, self.frames_death_left)
+        if len(self.frames_death_left) == self.frames_death_left_count + 1 or len(
+                self.frames_death_right) == self.frames_death_right_count + 1:
+            self.kill()
 
     def attack(self):
         if pygame.sprite.spritecollideany(self, hero_sprites) and self.is_alive:
@@ -103,7 +109,6 @@ class MobNear(pygame.sprite.Sprite):
                     self.frames_attack_left) == self.frames_attack_left_count + 1:
                 self.character.health -= 1
                 self.character.damaged = True
-            print(self.character.health, self.direction)
         else:
             self.frames_attack_left_count = 0
             self.frames_attack_right_count = 0
@@ -118,6 +123,9 @@ class MobNear(pygame.sprite.Sprite):
                     self.frames_idle_count_right, self.frames_idle_right)
 
     def move(self):
+        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx - 25, self.rect.y - 10, 50, 10))  # NEW
+        pygame.draw.rect(self.win, (0, 128, 0),
+                         (self.rect.centerx - 25, self.rect.y - 10, 50 - (5 * (10 - self.hp)), 10))  # NEW
         pos = self.character.get_rect_center()
         if self.is_alive:
             if abs(self.rect.centerx - pos[0]) < self.dist and abs(self.rect.centery - pos[1]) < self.dist:
@@ -188,5 +196,6 @@ class MobNear(pygame.sprite.Sprite):
         self.move()
         self.attack()
         if pygame.sprite.spritecollideany(self, weapon_group):
-            self.get_damage(2)
-            print(self.hp)
+            self.get_damage(0.1)
+        if not self.is_alive:
+            self.death()

@@ -110,9 +110,9 @@ class Hero(pygame.sprite.Sprite):
         return self.direction
 
     def move(self):
-        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx-30, self.rect.y - 20, 50, 10))  # NEW
+        pygame.draw.rect(self.win, (255, 0, 0), (self.rect.centerx - 25, self.rect.y - 20, 50, 10))
         pygame.draw.rect(self.win, (0, 128, 0),
-                         (self.rect.centerx-30, self.rect.y - 20, 50 - (5 * (10 - self.health)), 10))  # NEW
+                         (self.rect.centerx - 25, self.rect.y - 20, 50 - (5 * (10 - self.health)), 10))
         keys = pygame.key.get_pressed()
         if keys[pygame.K_d] and keys[pygame.K_w]:
             self.direction = 'dw'
@@ -192,23 +192,22 @@ class Hero(pygame.sprite.Sprite):
             # self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
             #     self.frames_attack_right_count,
             #     self.frames_attack_right)
-            if not(self.bash):
+            if not (self.bash):
                 self.attacking = True
                 self.bash = AnimatedSprite(weapon_group, all_sprites,
-                                    pygame.transform.scale(load_image('alice/attack_D.png'), (760, 110)),
-                                    3, 1, 520, 240, 1)
+                                           pygame.transform.scale(load_image('alice/attack_D.png'), (760, 110)),
+                                           3, 1, 520, 240, 1)
                 hero_sprites.add(self.bash)
                 all_sprites.remove(self.bash)
 
         elif keys[pygame.K_j]:
-            if not(self.bash):
+            if not (self.bash):
                 self.attacking = True
                 self.bash = AnimatedSprite(weapon_group, all_sprites,
-                                    pygame.transform.scale(load_image('alice/attack_A.png'), (760, 110)),
-                                    3, 1, 390, 265, 1)
+                                           pygame.transform.scale(load_image('alice/attack_A.png'), (760, 110)),
+                                           3, 1, 390, 265, 1)
                 hero_sprites.add(self.bash)
                 all_sprites.remove(self.bash)
-
 
     def get_damage(self):
         self.health -= 1
