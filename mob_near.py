@@ -196,6 +196,6 @@ class MobNear(pygame.sprite.Sprite):
         self.move()
         self.attack()
         if pygame.sprite.spritecollideany(self, weapon_group):
-            self.get_damage(0.1)
+            self.get_damage(0.5)
         if not self.is_alive:
             self.death()

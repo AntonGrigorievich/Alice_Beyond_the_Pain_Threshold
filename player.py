@@ -192,20 +192,38 @@ class Hero(pygame.sprite.Sprite):
             # self.frames_attack_right_count, self.frames_attack_right = self.animated_move(
             #     self.frames_attack_right_count,
             #     self.frames_attack_right)
-            if not (self.bash):
+            if not self.bash:
                 self.attacking = True
                 self.bash = AnimatedSprite(weapon_group, all_sprites,
                                            pygame.transform.scale(load_image('alice/attack_D.png'), (760, 110)),
-                                           3, 1, 520, 240, 1)
+                                           3, 1, 520, 240, 0.8)
                 hero_sprites.add(self.bash)
                 all_sprites.remove(self.bash)
 
         elif keys[pygame.K_j]:
-            if not (self.bash):
+            if not self.bash:
                 self.attacking = True
                 self.bash = AnimatedSprite(weapon_group, all_sprites,
                                            pygame.transform.scale(load_image('alice/attack_A.png'), (760, 110)),
-                                           3, 1, 390, 265, 1)
+                                           3, 1, 390, 265, 0.8)
+                hero_sprites.add(self.bash)
+                all_sprites.remove(self.bash)
+
+        elif keys[pygame.K_i]:
+            if not self.bash:
+                self.attacking = True
+                self.bash = AnimatedSprite(weapon_group, all_sprites,
+                                           pygame.transform.scale(load_image('alice/attack_W.png'), (300, 200)),
+                                           3, 1, 500, 130, 0.8)
+                hero_sprites.add(self.bash)
+                all_sprites.remove(self.bash)
+
+        elif keys[pygame.K_k]:
+            if not self.bash:
+                self.attacking = True
+                self.bash = AnimatedSprite(weapon_group, all_sprites,
+                                           pygame.transform.scale(load_image('alice/attack_S.png'), (300, 200)),
+                                           3, 1, 500, 230, 0.8)
                 hero_sprites.add(self.bash)
                 all_sprites.remove(self.bash)
 

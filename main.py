@@ -128,7 +128,7 @@ start_screen()
 
 # map = Map('test_map.tmx')
 
-infinite_map = Map('infinite_round_map.tmx')
+infinite_map = Map('infinite_round_map.tmx') # (200, 70)•(860, 420)
 
 lst_enemy = []
 character = Hero((100, 100), screen)
@@ -152,6 +152,7 @@ while True:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             character.damaged = True
+            print(curs.rect.x, curs.rect.y)
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
