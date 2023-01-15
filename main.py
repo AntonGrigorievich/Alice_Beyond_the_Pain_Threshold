@@ -64,6 +64,7 @@ def end_screen():
     game_over_sign = font_1.render('GAME OVER', True, '#ffffff')
     killcount_sign = font_2.render(f"YOU'VE TAKEN {character.killcount} LIVES", True, '#ffffff')
     time_alive_sign = font_3.render(f"AND LIVED FOR {(time.time() - character.time_alive) // 60} MINUTES", True, '#ffffff')
+    restart_sign = font_3.render('PRESS ANY KEY TO RESTART', True, '#ffffff')
 
     while True:
         screen.fill('white')
@@ -71,6 +72,7 @@ def end_screen():
         screen.blit(game_over_sign, (395, 50))
         screen.blit(killcount_sign, (395, 130))
         screen.blit(time_alive_sign, (410, 180))
+        screen.blit(restart_sign, (410, 560))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -80,6 +82,9 @@ def end_screen():
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.mixer.Sound('data/sounds/click.wav').play()
+                player.switch_track(track)
+                player.play(songs_start_point[track])
+                infinite_round()
 
         end_sprites.update()
         pygame.display.flip()
@@ -182,6 +187,92 @@ def pause(screen, message):
     screen.blit(text_2, (text_x + 3, text_y + 3))
 
 
+def infinite_round():
+    start_screen()
+
+    character = Hero((100, 100), screen)
+
+    for i in range(7):
+        lst_enemy.append(MobNear(10, 200 * i, character, screen))
+    for i in range(7):
+        lst_enemy.append(MobNear(1300, 200 * i, character, screen))
+    for i in range(1, 6):
+        lst_enemy.append(MobNear(200 * i, 10, character, screen))
+    for i in range(1, 6):
+        lst_enemy.append(MobNear(200 * i, 1300, character, screen))
+
+    curs = Coursor(coursor_group)
+    camera = Camera()
+
+    font = pygame.font.Font('data/fonts/orange kid.ttf', 15)
+    subject_sign = font.render('Kill as much as you can', True, '#ffffff')
+    controls_sign = font.render('use WASD to move and IJKL to fight', True, '#ffffff')
+
+    infinite_map.render(all_sprites, block_group)
+    last_wave = time.time()
+
+    last_move = 0
+    player.set_volume(0.5)
+    player.play(17.0)
+    run = True
+    while True:
+        screen.fill('black')
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                print(len(lst_enemy), character.killcount)
+            elif event.type == pygame.MOUSEMOTION:
+                curs.update(event)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    if run:
+                        last_wave = time.time() + 120
+                        player.set_volume(0.05)
+                    else:
+                        last_wave = time.time() - 120 
+                        player.set_volume(0.1)
+                    run = not run
+                last_move = time.time()
+
+        if time.time() - last_move >= 5:
+            character.sleepy = True
+        else:
+            character.sleepy = False
+
+        if time.time() - last_wave >= 10:
+            spawn_enemies(lst_enemy, character, screen)
+            last_wave = time.time()
+
+        if not character.is_alive:
+            character.kill()
+            curs.kill()
+            for enemy in lst_enemy:
+                enemy.kill()
+            for sprite in all_sprites:
+                sprite.kill()
+            end_screen()
+
+        all_sprites.draw(screen)
+        mob_group.draw(screen)
+        hero_sprites.draw(screen)
+        weapon_group.draw(screen)
+        coursor_group.draw(screen)
+        screen.blit(subject_sign, (900, 10))
+        screen.blit(controls_sign, (900, 30))
+        if run:
+            all_sprites.update()
+            weapon_group.update(screen)
+            camera.update(character)
+            for sprite in all_sprites:
+                camera.apply(sprite)
+        else:
+            pause(screen, 'Pause')
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
 start_screen()
 
 
@@ -194,11 +285,11 @@ def spawn_enemies(enemy_list, charachter, screen):
     for _ in range(7):
         enemy_list.append(MobNear(random.randrange(-700, 700), random.randrange(-700, 700), charachter, screen))
 
-for i in range(7):
+for i in range(2, 7):
     lst_enemy.append(MobNear(10, 200 * i, character, screen))
 for i in range(7):
     lst_enemy.append(MobNear(1300, 200 * i, character, screen))
-for i in range(1, 6):
+for i in range(2, 6):
     lst_enemy.append(MobNear(200 * i, 10, character, screen))
 for i in range(1, 6):
     lst_enemy.append(MobNear(200 * i, 1300, character, screen))
@@ -247,6 +338,12 @@ while True:
         last_wave = time.time()
 
     if not character.is_alive:
+        curs.kill()
+        character.kill()
+        for enemy in lst_enemy:
+            enemy.kill()
+        for sprite in all_sprites:
+            sprite.kill()
         end_screen()
 
     all_sprites.draw(screen)
