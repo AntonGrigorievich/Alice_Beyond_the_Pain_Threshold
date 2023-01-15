@@ -8,9 +8,9 @@ from camera import Camera
 from coursor import Coursor
 from player import Hero
 from map import Map
-from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group, weapon_group
+from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group, \
+    weapon_group
 from mob_near import MobNear
-from mob_far import MobFar
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
 pygame.init()
@@ -124,14 +124,35 @@ def start_screen():
         clock.tick(FPS)
 
 
+def pause(screen, message):
+    font = pygame.font.Font(None, 80)
+    text = font.render(message, True, (255, 70, 0))
+    text_x = size[0] // 2 - text.get_width() // 2
+    text_y = size[1] // 2 - text.get_height() // 2
+
+    s = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
+    s.fill((128, 128, 128, 200))
+    screen.blit(s, (0, 0))
+
+    screen.blit(text, (text_x, text_y))
+
+
 start_screen()
 
 # map = Map('test_map.tmx')
 
-infinite_map = Map('infinite_round_map.tmx') # (200, 70)•(860, 420)
+infinite_map = Map('infinite_round_map.tmx')  # (200, 70)•(860, 420)
 
 lst_enemy = []
 character = Hero((100, 100), screen)
+for i in range(7):
+    lst_enemy.append(MobNear(10, 200 * i, character, screen))
+for i in range(7):
+    lst_enemy.append(MobNear(1300, 200 * i, character, screen))
+for i in range(1, 6):
+    lst_enemy.append(MobNear(200 * i, 10, character, screen))
+for i in range(1, 6):
+    lst_enemy.append(MobNear(200 * i, 1300, character, screen))
 curs = Coursor(coursor_group)
 camera = Camera()
 
@@ -142,20 +163,19 @@ infinite_map.render(all_sprites, block_group)
 last_move = 0
 player.set_volume(0.3)
 player.play(0.0)
+run = True
 while True:
     screen.fill('black')
-    if len(lst_enemy) < 5:
-        for i in range(5):
-            lst_enemy.append(MobNear(200 * i, 0, character, screen))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            character.damaged = True
-            print(curs.rect.x, curs.rect.y)
+            pass
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                run = not run
             last_move = time.time()
 
     if time.time() - last_move >= 5:
@@ -164,14 +184,18 @@ while True:
         character.sleepy = False
 
     all_sprites.draw(screen)
-    all_sprites.update()
     mob_group.draw(screen)
     hero_sprites.draw(screen)
     weapon_group.draw(screen)
-    weapon_group.update(screen)
     coursor_group.draw(screen)
-    camera.update(character)
-    for sprite in all_sprites:
-        camera.apply(sprite)
+    if run:
+        all_sprites.update()
+        weapon_group.update(screen)
+        camera.update(character)
+        for sprite in all_sprites:
+            camera.apply(sprite)
+    else:
+        pause(screen, 'Pause')
+
     pygame.display.flip()
     clock.tick(FPS)

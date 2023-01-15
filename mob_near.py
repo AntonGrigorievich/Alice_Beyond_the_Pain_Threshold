@@ -1,5 +1,5 @@
 import pygame
-from config import load_image, all_sprites, mob_group, hero_sprites, weapon_group
+from config import load_image, all_sprites, mob_group, hero_sprites, weapon_group, width
 
 
 class MobNear(pygame.sprite.Sprite):
@@ -15,7 +15,7 @@ class MobNear(pygame.sprite.Sprite):
         self.character = hero
         self.is_alive = True
         self.is_free = True
-        self.direction = 'a'
+        self.direction = 'a' if self.x > width // 2 else 'd'
         self.dist = 200
         self.hurt = pygame.mixer.Sound('data/sounds/enemy_hurt.wav')
         self.hurt.set_volume(0.1)
@@ -80,6 +80,10 @@ class MobNear(pygame.sprite.Sprite):
         self.image = frames_run[frames_run_count]
         return frames_run_count, frames_run
 
+    def get_direction(self, x, w):
+        if x > w // 2:
+            self.direction = ''
+
     def get_damage(self, hp):
         self.hurt.play()
         self.hp -= hp
@@ -127,7 +131,7 @@ class MobNear(pygame.sprite.Sprite):
         pygame.draw.rect(self.win, (0, 128, 0),
                          (self.rect.centerx - 25, self.rect.y - 10, 50 - (5 * (10 - self.hp)), 10))  # NEW
         pos = self.character.get_rect_center()
-        if self.is_alive:
+        if self.is_alive and not pygame.sprite.spritecollideany(self, hero_sprites):
             if abs(self.rect.centerx - pos[0]) < self.dist and abs(self.rect.centery - pos[1]) < self.dist:
                 self.is_free = False
                 if self.rect.centerx != pos[0] and self.rect.centery != pos[1]:
