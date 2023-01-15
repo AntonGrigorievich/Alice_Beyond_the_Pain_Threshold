@@ -9,7 +9,7 @@ from coursor import Coursor
 from player import Hero
 from map import Map
 from config import size, load_image, all_sprites, start_sprites, hero_sprites, coursor_group, mob_group, block_group, \
-    weapon_group
+    weapon_group, end_sprites
 from mob_near import MobNear
 
 pygame.mixer.pre_init(44000, -16, 1, 512)
@@ -41,6 +41,49 @@ player = MusicPlayer(track)
 def terminate():
     pygame.quit()
     sys.exit()
+
+
+def end_screen():
+    end_image = pygame.transform.scale(load_image('AI_background.png'), (1100, 1024))
+    end_screen = pygame.sprite.Sprite(end_sprites)
+    end_screen.image = end_image
+    end_screen.rect = end_screen.image.get_rect()
+    end_screen.rect.x = 0
+    end_screen.rect.y = -200
+
+    curs = Coursor(end_sprites)
+
+    player.set_volume(0.5)
+    player.switch_track('Whos Ready for Tomorrow.mp3')
+    player.play(0.0)
+
+    font_1 = pygame.font.Font('data/fonts/orange kid.ttf', 85)
+    font_2 = pygame.font.Font('data/fonts/orange kid.ttf', 45)
+    font_3 = pygame.font.Font('data/fonts/orange kid.ttf', 30)
+
+    game_over_sign = font_1.render('GAME OVER', True, '#ffffff')
+    killcount_sign = font_2.render(f"YOU'VE TAKEN {character.killcount} LIVES", True, '#ffffff')
+    time_alive_sign = font_3.render(f"AND LIVED FOR {(time.time() - character.time_alive) // 60} MINUTES", True, '#ffffff')
+
+    while True:
+        screen.fill('white')
+        end_sprites.draw(screen)
+        screen.blit(game_over_sign, (395, 50))
+        screen.blit(killcount_sign, (395, 130))
+        screen.blit(time_alive_sign, (410, 180))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.MOUSEMOTION:
+                curs.update(event)
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.Sound('data/sounds/click.wav').play()
+
+        end_sprites.update()
+        pygame.display.flip()
+        clock.tick(FPS)
 
 
 def start_screen():
@@ -116,7 +159,7 @@ def start_screen():
             if start_screen_alice.rect.x < 1130:
                 start_screen_alice.rect.x += 3
             else:
-                player.switch_track('Whos Ready for Tomorrow.mp3')
+                player.switch_track('TheOnlyThingTheyFearIsYou.mp3')
                 return
 
         start_sprites.update()
@@ -125,8 +168,9 @@ def start_screen():
 
 
 def pause(screen, message):
-    font = pygame.font.Font(None, 80)
-    text = font.render(message, True, (255, 70, 0))
+    font = pygame.font.Font('data/fonts/orange kid.ttf', 80)
+    text = font.render(message, True, ('#C74DFF'))
+    text_2 = font.render(message, True, ('#40E3E2'))
     text_x = size[0] // 2 - text.get_width() // 2
     text_y = size[1] // 2 - text.get_height() // 2
 
@@ -135,16 +179,21 @@ def pause(screen, message):
     screen.blit(s, (0, 0))
 
     screen.blit(text, (text_x, text_y))
+    screen.blit(text_2, (text_x + 3, text_y + 3))
 
 
 start_screen()
 
-# map = Map('test_map.tmx')
 
 infinite_map = Map('infinite_round_map.tmx')  # (200, 70)•(860, 420)
 
 lst_enemy = []
 character = Hero((100, 100), screen)
+
+def spawn_enemies(enemy_list, charachter, screen):
+    for _ in range(7):
+        enemy_list.append(MobNear(random.randrange(-700, 700), random.randrange(-700, 700), charachter, screen))
+
 for i in range(7):
     lst_enemy.append(MobNear(10, 200 * i, character, screen))
 for i in range(7):
@@ -153,16 +202,20 @@ for i in range(1, 6):
     lst_enemy.append(MobNear(200 * i, 10, character, screen))
 for i in range(1, 6):
     lst_enemy.append(MobNear(200 * i, 1300, character, screen))
+
 curs = Coursor(coursor_group)
 camera = Camera()
 
-# map.render(all_sprites, block_group)
+font = pygame.font.Font('data/fonts/orange kid.ttf', 15)
+subject_sign = font.render('Kill as much as you can', True, '#ffffff')
+controls_sign = font.render('use WASD to move and IJKL to fight', True, '#ffffff')
 
 infinite_map.render(all_sprites, block_group)
+last_wave = time.time()
 
 last_move = 0
-player.set_volume(0.3)
-player.play(0.0)
+player.set_volume(0.5)
+player.play(17.0)
 run = True
 while True:
     screen.fill('black')
@@ -170,11 +223,17 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            pass
+            print(len(lst_enemy), character.killcount)
         elif event.type == pygame.MOUSEMOTION:
             curs.update(event)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                if run:
+                    last_wave = time.time() + 120
+                    player.set_volume(0.05)
+                else:
+                    last_wave = time.time() - 120 
+                    player.set_volume(0.1)
                 run = not run
             last_move = time.time()
 
@@ -183,11 +242,20 @@ while True:
     else:
         character.sleepy = False
 
+    if time.time() - last_wave >= 10:
+        spawn_enemies(lst_enemy, character, screen)
+        last_wave = time.time()
+
+    if not character.is_alive:
+        end_screen()
+
     all_sprites.draw(screen)
     mob_group.draw(screen)
     hero_sprites.draw(screen)
     weapon_group.draw(screen)
     coursor_group.draw(screen)
+    screen.blit(subject_sign, (900, 10))
+    screen.blit(controls_sign, (900, 30))
     if run:
         all_sprites.update()
         weapon_group.update(screen)
