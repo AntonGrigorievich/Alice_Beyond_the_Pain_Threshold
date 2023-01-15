@@ -1,4 +1,6 @@
 import pygame
+import random
+from aidkit import AidKit
 from config import load_image, all_sprites, mob_group, hero_sprites, weapon_group, width
 
 
@@ -99,6 +101,10 @@ class MobNear(pygame.sprite.Sprite):
                 self.frames_death_left_count, self.frames_death_left)
         if len(self.frames_death_left) == self.frames_death_left_count + 1 or len(
                 self.frames_death_right) == self.frames_death_right_count + 1:
+            self.character.killcount += 1
+            if random.randint(0, 7) == 5:
+                pygame.mixer.Sound('data/sounds/click.wav').play()
+                aidkit = AidKit(self.x, self.y)
             self.kill()
 
     def attack(self):

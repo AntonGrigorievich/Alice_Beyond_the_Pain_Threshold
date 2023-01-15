@@ -1,5 +1,6 @@
 import pygame
-from config import load_image, all_sprites, hero_sprites, block_group, weapon_group
+import time
+from config import load_image, all_sprites, hero_sprites, block_group, weapon_group, aid_group
 from animated_sprite import AnimatedSprite
 
 
@@ -18,10 +19,13 @@ class Hero(pygame.sprite.Sprite):
         self.size = (37, 56)
         self.health = 10
         self.speed = 10
+        self.killcount = 0
         self.direction = 's'
         self.idle()
         self.timer = 0
         self.x, self.y = position
+        self.time_alive = time.time()
+        self.is_alive = True
         self.sleepy = False
         self.damaged = False
         self.attacking = False
@@ -269,3 +273,7 @@ class Hero(pygame.sprite.Sprite):
                 self.bash.kill()
                 self.attacking = False
                 self.bash = False
+        if self.health <= 0:
+            self.is_alive = False
+        if pygame.sprite.spritecollideany(self, aid_group):
+            self.health += 1
